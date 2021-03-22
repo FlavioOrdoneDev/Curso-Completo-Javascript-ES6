@@ -16,16 +16,16 @@ export default class initModal {
     this.toggleModal();
   }
 
-  addModalEvents() {
-    this.botaoAbrir.addEventListener('click', this.eventToggleModal);
-    this.botaoFechar.addEventListener('click', this.eventToggleModal);
-    this.containerModal.addEventListener('click', this.cliqueForaModal);
-  }
-
   cliqueForaModal(event) {
     if (event.target === this.containerModal) {
       this.toggleModal();
     }
+  }
+
+  addModalEvents() {
+    this.botaoAbrir.addEventListener('click', this.eventToggleModal);
+    this.botaoFechar.addEventListener('click', this.eventToggleModal);
+    this.containerModal.addEventListener('click', this.cliqueForaModal);
   }
 
   init() {
