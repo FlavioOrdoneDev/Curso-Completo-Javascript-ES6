@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "nome": "Flávio",
+    "aula": "javascript",
+    "tempo": "15min" 
+  },
+  {
+    "id": 2,
+    "nome": "Fernanda",
+    "aula": "html",
+    "tempo": "25min" 
+  },
+  {
+    "id": 3,
+    "nome": "Warley",
+    "aula": "css",
+    "tempo": "30min" 
+  }  
+]
