@@ -9,6 +9,10 @@ export default class Slide {
     }
   }
 
+  transiction(active) {
+    this.slide.style.transition = active ? 'transform .3s' : '';
+  }
+
   moveSlide(distanceX) {
     this.distance.movePosition = distanceX;
     this.slide.style.transform = `translate3d(${distanceX}px, 0, 0)`;
@@ -28,10 +32,11 @@ export default class Slide {
       movetype = 'mousemove';
     } else {
       this.distance.startX = event.changedTouches[0].clientX;
-      movetype = 'touchmove';
+      movetype = 'touchmove';      
     }
     
     this.wrapper.addEventListener(movetype, this.onMove);
+    this.transiction(false);
   }
 
   onMove(event) {
@@ -46,6 +51,18 @@ export default class Slide {
     const movetype = (event.type === 'mouseup') ? 'mousemove' : 'touchmove';
     this.wrapper.removeEventListener(movetype, this.onMove);
     this.distance.finalPosition = this.distance.movePosition;
+    this.transiction(true);
+    this.changeSlideOnEnd();
+  }
+
+  changeSlideOnEnd() {
+    if (this.distance.movement > 120 && this.index.next !== undefined) {
+      this.activeNextSlide();
+    } else if (this.distance.movement < 120 && this.index.prev != undefined) {
+      this.activePrevSlide();
+    } else {
+      this.changeSlide(this.index.active);
+    }
   }
 
   addSlideEvents() {
@@ -62,18 +79,18 @@ export default class Slide {
   }
 
   slidePosition(slide) {
-    const margin = (this.wrapper.offsetWidth - slide.offsetWith) / 2;
+    const margin = (this.wrapper.offsetWidth - slide.offsetWidth) / 2;
     return -(slide.offsetLeft - margin);
   }
 
   slidesConfig() {
-    this.slideArray = [... this.slide.children].map((element) => {
+    this.slideArray = [...this.slide.children].map((element) => {
       const position = this.slidePosition(element);
       return { position, element};
-    })
+    });
   }
 
-  slideIndexNav(index) {
+  slidesIndexNav(index) {
     const last = this.slideArray.length - 1;
     this.index = {
       prev: index ? index - 1 : undefined,
@@ -84,13 +101,24 @@ export default class Slide {
 
   changeSlide(index) {
     const activeSlide = this.slideArray[index];
-    this.moveSlide(this.slideArray[index].position);
-    this.slideIndexNav(index);
+    this.moveSlide(activeSlide.position);
+    this.slidesIndexNav(index);
     this.distance.finalPosition = activeSlide.position;
+  }
+
+  activePrevSlide() {
+    if (this.index.prev !== undefined)
+      this.changeSlide(this.index.prev)
+  }
+
+  activeNextSlide() {
+    if (this.index.next !== undefined)
+      this.changeSlide(this.index.next)
   }
 
   init() {
     this.bindEvents();
+    this.transiction(true);
     this.addSlideEvents();
     this.slidesConfig();
     return this;
